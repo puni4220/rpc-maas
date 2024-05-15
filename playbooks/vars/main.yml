@@ -221,3 +221,6 @@ openrc_clouds_yml_file_mode: "0600"
 
 # (NOTE:tonytan4ever) rpcr-dynamic inventory will dynamically determine
 # if deploy_osp should be true or not, so we make main agnostic
+
+# maas ovs checks jira RPCOS-76 
+ovs_bridge_name: "br-ex"

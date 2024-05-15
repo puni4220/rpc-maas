@@ -82,3 +82,44 @@
 
   tags:
     - maas-hosts-network
+
+# maas ovs checks jira RPCOS-76
+- name: Install checks for ovs
+  hosts: neutron_openvswitch_agent
+  gather_facts: true
+  user: "{{ ansible_ssh_user | default('root') }}"
+  become: true
+  pre_tasks:
+    - include_tasks: "common-tasks/maas_excluded_regex.yml"
+
+  tasks:
+    - name: Install ovs bridge physical port check
+      template:
+        src: "templates/rax-maas/ovs_bridge_physical_port_check.yaml.j2"
+        dest: "/etc/rackspace-monitoring-agent.conf.d/ovs-br_physical_port_check--{{ inventory_hostname }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: "0644"
+
+    - name: Install ovs bridge ext flow check
+      template:
+        src: "templates/rax-maas/ovs_br_ext_flow_check.yaml.j2"
+        dest: "/etc/rackspace-monitoring-agent.conf.d/ovs_br_ext_flow_check--{{ inventory_hostname }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: "0644"
+
+    - name: Install ovs bridge br-int canary flow check
+      template:
+        src: "templates/rax-maas/br_int_canary_flow_check.yaml.j2"
+        dest: "/etc/rackspace-monitoring-agent.conf.d/br_int_canary_flow_check--{{ inventory_hostname }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: "0644"
+
+  vars_files:
+    - vars/main.yml
+    - vars/maas.yml
+
+  tags:
+    - maas-hosts-ovs
